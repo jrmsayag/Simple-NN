@@ -103,3 +103,7 @@ class Layer:
             newLayer.delta_B = self.delta_B.copy()
 
         return newLayer
+
+    def printTopology(self):
+
+        return f"{self.act.printName()}({self.W.shape},{self.weight_init},{self.is_output})"

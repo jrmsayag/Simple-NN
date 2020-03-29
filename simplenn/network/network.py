@@ -64,3 +64,7 @@ class Network:
     def copy(self, init=False):
 
         return Network(self.loss, [l.copy(init) for l in self.layers])
+
+    def printTopology(self):
+
+        return "-".join([l.printTopology() for l in self.layers])

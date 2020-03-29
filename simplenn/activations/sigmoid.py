@@ -13,3 +13,6 @@ class Sigmoid(activations.Activation):
     def prime(self, X):
         A = self.apply(X)
         return A * (1.0 - A)
+
+    def printName(self):
+        return f"{self.__class__.__name__}[]"

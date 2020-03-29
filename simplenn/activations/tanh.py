@@ -13,3 +13,6 @@ class TanH(activations.Activation):
     def prime(self, X):
         A = self.apply(X)
         return 1.0 - A*A
+
+    def printName(self):
+        return f"{self.__class__.__name__}[]"

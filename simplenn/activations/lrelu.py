@@ -16,3 +16,6 @@ class LRelu(activations.Activation):
         Ap[Ap < 0.0] = self.l
         Ap[Ap > 0.0] = 1.0
         return Ap
+
+    def printName(self):
+        return f"{self.__class__.__name__}[{self.l}]"

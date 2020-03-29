@@ -8,3 +8,6 @@ class Activation:
 
     def prime(self, X):
         raise NotImplementedError()
+
+    def printName(self):
+        raise NotImplementedError()
