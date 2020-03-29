@@ -4,4 +4,4 @@ dist/
 *.egg-info/
 *.py[cod]
 
-!Simplest_NN.ipynb
+!examples/*.ipynb
