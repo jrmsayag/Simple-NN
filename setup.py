@@ -13,6 +13,7 @@ setup(
         'simplenn',
         'simplenn.activations',
         'simplenn.loss',
+        'simplenn.loss.simulation',
         'simplenn.network',
         'simplenn.optim'
     ],
