@@ -21,6 +21,9 @@ setup(
     install_requires = [
         'numpy'
     ],
+    extras_require = {
+        'examples':  ['gym', 'wandb']
+    },
     description = 'A very basic (deep) neural networks implementation.',
     platforms = 'ALL',
 )
