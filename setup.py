@@ -11,11 +11,17 @@ setup(
     maintainer_email = 'jrmsayag@gmail.com',
     packages = [
         'simplenn',
-        'simplenn.activations',
-        'simplenn.loss',
-        'simplenn.loss.simulation',
-        'simplenn.network',
-        'simplenn.optim'
+        'simplenn.evaluation',
+        'simplenn.evaluation.loss',
+        'simplenn.evaluation.simulation',
+        'simplenn.optim',
+        'simplenn.optim.evolution',
+        'simplenn.optim.gradient',
+        'simplenn.optim.qlearning',
+        'simplenn.structures',
+        'simplenn.structures.network',
+        'simplenn.structures.network.activations',
+        'simplenn.structures.qfunction'
     ],
     python_requires='>=3',
     install_requires = [
@@ -24,6 +30,6 @@ setup(
     extras_require = {
         'examples':  ['gym', 'wandb']
     },
-    description = 'A very basic (deep) neural networks implementation.',
+    description = 'A very basic implementation of various machine-learning aglorithms.',
     platforms = 'ALL',
 )
