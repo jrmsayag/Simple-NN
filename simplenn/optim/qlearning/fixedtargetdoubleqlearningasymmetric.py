@@ -1,6 +1,6 @@
-from .. import optim
+from .. import qlearning
 
-class FixedTargetDoubleQLearningAsymmetric(optim.BaseSimulation):
+class FixedTargetDoubleQLearningAsymmetric(qlearning.BaseSimulation):
 
     def __init__(self, Q, replayMem, targetQUpdateFreq, quantums):
 

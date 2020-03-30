@@ -1,6 +1,6 @@
 import numpy as np
 
-from .. import qfunction
+from ...structures import qfunction
 
 class BaseSimulation:
 

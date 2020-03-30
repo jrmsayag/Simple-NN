@@ -1,9 +1,9 @@
 import random as rd
 
-from .. import optim
-from .. import qfunction
+from .. import qlearning
+from ...structures import qfunction
 
-class DoubleQLearning(optim.BaseSimulation):
+class DoubleQLearning(qlearning.BaseSimulation):
 
     def __init__(self, Q, replayMem):
 

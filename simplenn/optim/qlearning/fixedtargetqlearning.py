@@ -1,6 +1,6 @@
-from .. import optim
+from .. import qlearning
 
-class FixedTargetQLearning(optim.BaseSimulation):
+class FixedTargetQLearning(qlearning.BaseSimulation):
 
     def __init__(self, Q, replayMem, targetQUpdateFreq):
 

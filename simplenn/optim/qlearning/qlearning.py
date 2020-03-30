@@ -1,6 +1,6 @@
-from .. import optim
+from .. import qlearning
 
-class QLearning(optim.BaseSimulation):
+class QLearning(qlearning.BaseSimulation):
 
     def __init__(self, Q, replayMem):
 
