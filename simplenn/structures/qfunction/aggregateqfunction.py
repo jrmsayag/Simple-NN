@@ -16,9 +16,26 @@ class AggregateQFunction(qfunction.BaseQFunction):
 
         self.Qs = Qs
 
+    @property
+    def isLearning(self):
+
+        return super().isLearning
+
+    @isLearning.setter
+    def isLearning(self, newVal):
+
+        super(self.__class__, self.__class__).isLearning.fset(self, newVal)
+
+        for Q in self.Qs:
+            Q.isLearning = newVal
+
     def copy(self):
 
-        return AggregateQFunction([q.copy() for q in self.Qs])
+        newQ = AggregateQFunction([q.copy() for q in self.Qs])
+
+        newQ.isLearning = self.isLearning
+
+        return newQ
 
     def getData(self, s, a=None):
 

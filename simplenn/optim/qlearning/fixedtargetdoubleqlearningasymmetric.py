@@ -2,24 +2,18 @@ from .. import qlearning
 
 class FixedTargetDoubleQLearningAsymmetric(qlearning.BaseSimulation):
 
-    def __init__(self, Q, replayMem, targetQUpdateFreq, quantums):
+    def __init__(self, Q, replayMem, targetQUpdateFreq):
 
-        super().__init__(Q, quantums)
+        super().__init__(Q)
 
         self.replayMem = replayMem
         self.targetQUpdateFreq = targetQUpdateFreq
 
         self.learnStepCounter = 0
 
-    def learnStep(self):
+    def learnStep(self, state, nextState, action, reward, done):
 
-        self.replayMem.addSample((
-            self.s_nextStateQu,
-            self.s_stateQu,
-            self.s_action,
-            self.s_reward,
-            self.s_done
-        ))
+        self.replayMem.addSample((nextState, state, action, reward, done))
 
         if self.replayMem.ready:
 

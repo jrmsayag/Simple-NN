@@ -1,21 +1,37 @@
 import numpy as np
 
-class Simulation:
+from ... import evaluation
 
-    def __init__(self, env, nEpisodes, actionSelectionMode="argmax", isScore=True):
+class Simulation(evaluation.EvalFunc):
+
+    def __init__(self, env, nEpisodes=1, isScore=True):
+
+        super().__init__()
 
         self.env = env
         self.nEpisodes = nEpisodes
-        self.actionSelectionMode = actionSelectionMode
         self.isScore = isScore
 
-    def apply(self, n):
+    @property
+    def isSimulation(self):
 
-        episodesResult = [self.performEpisode(n) for _ in range(self.nEpisodes)]
+        return True
+
+    @property
+    def isLoss(self):
+
+        return False
+
+    def performEpisodes(self, struct, nEpisodes=None):
+
+        if not nEpisodes:
+            nEpisodes = self.nEpisodes
+
+        episodesResult = [self.performEpisode(struct) for _ in range(nEpisodes)]
 
         return (np.mean(episodesResult), episodesResult)
 
-    def performEpisode(self, n, render=False):
+    def performEpisode(self, struct, render=False, learnCallback=None):
 
         # Initialize environment and state
 
@@ -33,17 +49,23 @@ class Simulation:
 
             # Choosing action
 
-            output = n.forward(self.s_state[..., np.newaxis])
-
-            if self.actionSelectionMode == "argmax":
-                self.s_action = np.argmax(output)
-            else:
-                raise ValueError(f"Uknown action selection mode {self.actionSelectionMode}!")
+            self.s_action = struct.findAction(self.s_state)
 
             # Performing action
 
             self.s_nextState, self.s_reward, self.s_done, _ = self.env.step(self.s_action)
             self.s_totalReward += self.s_reward
+
+            # Performing learning step
+
+            if learnCallback is not None:
+
+                learnCallback(
+                    self.s_state,
+                    self.s_nextState,
+                    self.s_action,
+                    self.s_reward,
+                    self.s_done)
 
             # Checking game end
 

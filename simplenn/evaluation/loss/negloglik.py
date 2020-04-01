@@ -4,8 +4,8 @@ from .. import loss
 
 class NegLogLike(loss.Loss):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, xs, ys):
+        super().__init__(xs, ys)
 
     def apply(self, A, Y):
         return -(Y * np.log(A) + (1 - Y) * np.log(1 - A))

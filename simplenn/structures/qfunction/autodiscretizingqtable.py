@@ -143,6 +143,7 @@ class AutoDiscretizingQTable(qfunction.QTable):
         )
 
         newQ.data = self.copyData()
+        newQ.isLearning = self.isLearning
 
         newQ.rootNode = self.rootNode.copy()
         newQ.nextGroupId = self.nextGroupId

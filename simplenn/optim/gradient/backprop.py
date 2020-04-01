@@ -4,7 +4,7 @@ class BackProp:
 
         pass
 
-    def run(self, net, xs, ys, batchsize, lRate, epochs, verboseFreq=0, recordFreq=0):
+    def run(self, net, loss, batchsize, lRate, epochs, verboseFreq=0, recordFreq=0):
 
         self.networks = []
 
@@ -12,32 +12,32 @@ class BackProp:
 
             j = 0
 
-            while j * batchsize < xs.shape[1]:
+            while j * batchsize < loss.xs.shape[1]:
 
-                xBatch = xs[:, j*batchsize:(j+1)*batchsize]
-                yBatch = ys[:, j*batchsize:(j+1)*batchsize]
+                xBatch = loss.xs[:, j*batchsize:(j+1)*batchsize]
+                yBatch = loss.ys[:, j*batchsize:(j+1)*batchsize]
 
                 j += 1
 
-                net.backwardBatch(xBatch, yBatch, lRate)
+                net.backwardBatch(loss, xBatch, yBatch, lRate)
 
             if verboseFreq and i % verboseFreq == 0:
 
-                error = net.loss.apply(net.forward(xs), ys).sum()
+                error = loss.apply(net.forward(loss.xs), loss.ys).sum()
                 print(f"Epoch {i}: {error}")
 
             if recordFreq and i % recordFreq == 0:
 
-                self.record(net, xs, ys, lRate)
+                self.record(net, loss, lRate)
 
-        self.record(net, xs, ys, lRate)
+        self.record(net, loss, lRate)
 
         return net
 
-    def record(self, net, xs, ys, lRate):
+    def record(self, net, loss, lRate):
 
         netCopy = net.copy()
 
-        netCopy.backwardBatch(xs, ys, lRate)
+        netCopy.backwardBatch(loss, loss.xs, loss.ys, lRate)
 
         self.networks.append(netCopy)

@@ -14,15 +14,9 @@ class DoubleQLearning(qlearning.BaseSimulation):
 
         self.replayMem = replayMem
 
-    def learnStep(self):
+    def learnStep(self, state, nextState, action, reward, done):
 
-        self.replayMem.addSample((
-            self.s_nextState,
-            self.s_state,
-            self.s_action,
-            self.s_reward,
-            self.s_done
-        ))
+        self.replayMem.addSample((nextState, state, action, reward, done))
 
         if self.replayMem.ready:
 

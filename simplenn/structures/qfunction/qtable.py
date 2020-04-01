@@ -27,6 +27,7 @@ class QTable(qfunction.BaseQFunction):
         )
 
         newQ.data = self.copyData()
+        newQ.isLearning = self.isLearning
 
         return newQ
 

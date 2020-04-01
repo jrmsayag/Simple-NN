@@ -1,9 +1,15 @@
+import numpy as np
+
 class Network:
 
-    def __init__(self, loss, layers):
+    # Initialization
 
-        self.loss = loss
+    def __init__(self, layers, actionSelectionMode="argmax"):
+
         self.layers = layers
+        self.actionSelectionMode = actionSelectionMode
+
+    # Acting methods
 
     def forward(self, X):
 
@@ -15,7 +21,18 @@ class Network:
 
         return A
 
-    def backwardBatch(self, batch_X, batch_Y, lRate):
+    def findAction(self, state):
+
+        output = self.forward(state[..., np.newaxis])
+
+        if self.actionSelectionMode == "argmax":
+            return np.argmax(output)
+        else:
+            raise ValueError(f"Uknown action selection mode {self.actionSelectionMode}!")
+
+    # Learning methods
+
+    def backwardBatch(self, loss, batch_X, batch_Y, lRate):
 
         self.forward(batch_X)
 
@@ -27,7 +44,7 @@ class Network:
 
             if layer.is_output:
 
-                dLdZ = self.loss.prime(A, batch_Y) * layer.act.prime(Z)
+                dLdZ = loss.prime(A, batch_Y) * layer.act.prime(Z)
 
             else:
 
@@ -59,11 +76,13 @@ class Network:
 
             newLayers.append(layerA.crossover(layerB))
 
-        return Network(self.loss, newLayers)
+        return Network(newLayers, self.actionSelectionMode)
+
+    # Administrative methods
 
     def copy(self, init=False):
 
-        return Network(self.loss, [l.copy(init) for l in self.layers])
+        return Network([l.copy(init) for l in self.layers], self.actionSelectionMode)
 
     def printTopology(self):
 

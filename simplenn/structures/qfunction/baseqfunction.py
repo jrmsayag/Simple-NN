@@ -14,6 +14,18 @@ class BaseQFunction:
         self.epsRampLen = epsRampLen
         self.defaultVal = defaultVal
 
+        self._isLearning = False
+
+    @property
+    def isLearning(self):
+
+        return self._isLearning
+
+    @isLearning.setter
+    def isLearning(self, newVal):
+
+        self._isLearning = newVal
+
     def copy(self):
 
         raise NotImplementedError("Must be implemented in subclasses!")
@@ -21,6 +33,13 @@ class BaseQFunction:
     def getData(self, s, a=None):
 
         raise NotImplementedError("Must be implemented in subclasses!")
+
+    def findAction(self, state):
+
+        if self.isLearning:
+            return self.findActionEpsilon(state, None)[0]
+        else:
+            return self.findActionEpsilon(state, 0.0)[0]
 
     def findActionEpsilon(self, s, eps):
 

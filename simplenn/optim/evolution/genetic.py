@@ -9,8 +9,7 @@ class Genetic:
     def run(
         self,
         net,
-        xs,
-        ys,
+        evalFunc,
         popSize,
         tournamentSize,
         nElitism,
@@ -33,8 +32,8 @@ class Genetic:
 
             # Applying loss/fitness function.
 
-            penalties = [(n, *self.computeLoss(n, xs, ys, True)) for n in self.population]
-            penalties.sort(key = lambda penalty: self.sortKeyFor(penalty, xs, ys))
+            penalties = [(n, *self.computeLoss(n, evalFunc, True)) for n in self.population]
+            penalties.sort(key = lambda penalty: self.sortKeyFor(penalty, evalFunc))
 
             # Showing the result.
 
@@ -44,7 +43,7 @@ class Genetic:
 
             if recordFreq and self.currentGen % recordFreq == 0:
 
-                self.record(penalties[0][0], xs, ys)
+                self.record(penalties[0][0], evalFunc)
 
             # Creating the next generation's population...
 
@@ -61,12 +60,12 @@ class Genetic:
 
                 p1 = candidatesP1[0]
                 for c in candidatesP1[1:]:
-                    if self.sortKeyFor(c, xs, ys) < self.sortKeyFor(p1, xs, ys):
+                    if self.sortKeyFor(c, evalFunc) < self.sortKeyFor(p1, evalFunc):
                         p1 = c
 
                 p2 = candidatesP2[0]
                 for c in candidatesP2[1:]:
-                    if self.sortKeyFor(c, xs, ys) < self.sortKeyFor(p2, xs, ys):
+                    if self.sortKeyFor(c, evalFunc) < self.sortKeyFor(p2, evalFunc):
                         p2 = c
 
                 # Crossing over the selected parents.
@@ -88,36 +87,36 @@ class Genetic:
             self.population = newPop
             self.currentGen += 1
 
-        penalties = [(n, *self.computeLoss(n, xs, ys, False)) for n in self.population]
-        penalties.sort(key = lambda penalty: self.sortKeyFor(penalty, xs, ys))
+        penalties = [(n, *self.computeLoss(n, evalFunc, False)) for n in self.population]
+        penalties.sort(key = lambda penalty: self.sortKeyFor(penalty, evalFunc))
 
-        self.record(penalties[0][0], xs, ys)
+        self.record(penalties[0][0], evalFunc)
 
         return penalties[0][0]
 
-    def computeLoss(self, n, xs, ys, countEpisodes):
+    def computeLoss(self, n, evalFunc, countEpisodes):
 
-        if xs is None or ys is None:
+        if evalFunc.isSimulation:
 
             if countEpisodes:
-                self.currentEpisode += n.loss.nEpisodes
+                self.currentEpisode += evalFunc.nEpisodes
 
-            return n.loss.apply(n)
+            return evalFunc.performEpisodes(n)
 
         else:
 
             if countEpisodes:
-                self.currentEpisode += ys.shape[-1]
+                self.currentEpisode += evalFunc.ys.shape[-1]
 
-            res = n.loss.apply(n.forward(xs), ys)
+            res = evalFunc.apply(n.forward(evalFunc.xs), evalFunc.ys)
 
             return (res.sum(), res.sum(axis=0))
 
-    def sortKeyFor(self, penalty, xs, ys):
+    def sortKeyFor(self, penalty, evalFunc):
 
-        if xs is None or ys is None:
+        if evalFunc.isSimulation:
 
-            if penalty[0].loss.isScore:
+            if evalFunc.isScore:
 
                 return -penalty[1]
 
@@ -152,11 +151,11 @@ class Genetic:
 
         wandb.log(res)
 
-    def record(self, net, xs, ys):
+    def record(self, net, evalFunc):
 
         netCopy = net.copy()
 
-        if xs is not None:
-            netCopy.forward(xs)
+        if evalFunc.isLoss:
+            netCopy.forward(evalFunc.xs)
 
         self.networks.append(netCopy)

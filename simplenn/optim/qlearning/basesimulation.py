@@ -9,67 +9,19 @@ class BaseSimulation:
         self.Q = Q
         self.qs = []
 
-    def findActionStandard(self):
-
-        return self.Q.findActionEpsilon(self.s_state, 0.0)
-
-    def findActionLearn(self):
-
-        return self.Q.findActionEpsilon(self.s_state, None)
-
-    def learnStep(self):
+    def learnStep(self, state, nextState, action, reward, done):
 
         raise NotImplementedError("Learn not implemented!")
 
-    def performEpisode(self, env, learn=False, render=False):
+    def learn(
+        self,
+        sim,
+        nEpisodes,
+        verboseFreq=0,
+        recordFreq=0,
+        wandb=None):
 
-        # Initialize environment and state
-
-        self.s_state = env.reset()
-        self.s_totalReward = 0
-
-        # Simulating the environment
-
-        while True:
-
-            # Rendering
-
-            if render and not learn:
-                env.render()
-
-            # Choosing action
-
-            if learn:
-                self.s_action, _ = self.findActionLearn()
-            else:
-                self.s_action, _ = self.findActionStandard()
-
-            # Performing action
-
-            self.s_nextState, self.s_reward, self.s_done, _ = env.step(self.s_action)
-            self.s_totalReward += self.s_reward
-
-            # Updating Q
-
-            if learn:
-                self.learnStep()
-
-            # Checking game end
-
-            if self.s_done:
-                break
-            else:
-                self.s_state = self.s_nextState
-
-        # Closing environment
-
-        env.close()
-
-        # Returning score
-
-        return self.s_totalReward
-
-    def learn(self, env, nEpisodes, nTest=0, verboseFreq=0, recordFreq=0, wandb=None):
+        oldIsLearning = self.Q.isLearning
 
         for episode in range(nEpisodes + 1):
 
@@ -77,13 +29,15 @@ class BaseSimulation:
 
             # Performing one episode and updating Q
 
-            self.performEpisode(env, learn=True)
+            self.Q.isLearning = True
+            sim.performEpisode(self.Q, learnCallback=self.learnStep)
+            self.Q.isLearning = oldIsLearning
 
             # Performance evaluation
 
-            if verboseFreq and nTest and episode % verboseFreq == 0:
+            if verboseFreq and episode % verboseFreq == 0:
 
-                self.log(env, nTest, wandb)
+                self.log(sim.performEpisodes(self.Q)[1], wandb)
 
             # Recording intermediate Q function
 
@@ -93,9 +47,7 @@ class BaseSimulation:
 
         return self.Q
 
-    def log(self, env, nTest, wandb):
-
-        testScores = [self.performEpisode(env) for _ in range(nTest)]
+    def log(self, testScores, wandb):
 
         if wandb is None:
             self.logConsole(testScores)

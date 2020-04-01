@@ -31,6 +31,7 @@ class DiscretizedQTable(qfunction.QTable):
         )
 
         newQ.data = self.copyData()
+        newQ.isLearning = self.isLearning
 
         return newQ
 
