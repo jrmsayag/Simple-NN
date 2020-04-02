@@ -1,4 +1,4 @@
-from .basesimulation import BaseSimulation
+from .baseqlearning import BaseQLearning
 from .doubleqlearning import DoubleQLearning
 from .fixedtargetdoubleqlearningsymmetric import FixedTargetDoubleQLearningSymmetric
 from .fixedtargetdoubleqlearningasymmetric import FixedTargetDoubleQLearningAsymmetric

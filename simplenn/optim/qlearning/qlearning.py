@@ -1,6 +1,6 @@
 from .. import qlearning
 
-class QLearning(qlearning.BaseSimulation):
+class QLearning(qlearning.BaseQLearning):
 
     def __init__(self, Q, replayMem):
 

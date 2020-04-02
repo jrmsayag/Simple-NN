@@ -3,7 +3,7 @@ import random as rd
 from .. import qlearning
 from ...structures import qfunction
 
-class FixedTargetDoubleQLearningSymmetric(qlearning.BaseSimulation):
+class FixedTargetDoubleQLearningSymmetric(qlearning.BaseQLearning):
 
     def __init__(self, Q, replayMem, targetQUpdateFreq):
 

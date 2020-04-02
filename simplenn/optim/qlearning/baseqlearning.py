@@ -2,7 +2,7 @@ import numpy as np
 
 from ...structures import qfunction
 
-class BaseSimulation:
+class BaseQLearning:
 
     def __init__(self, Q):
 

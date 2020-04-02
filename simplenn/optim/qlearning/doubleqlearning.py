@@ -3,7 +3,7 @@ import random as rd
 from .. import qlearning
 from ...structures import qfunction
 
-class DoubleQLearning(qlearning.BaseSimulation):
+class DoubleQLearning(qlearning.BaseQLearning):
 
     def __init__(self, Q, replayMem):
 
