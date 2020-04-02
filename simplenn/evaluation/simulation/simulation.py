@@ -31,7 +31,7 @@ class Simulation(evaluation.EvalFunc):
 
         return (np.mean(episodesResult), episodesResult)
 
-    def performEpisode(self, struct, render=False, learnCallback=None):
+    def performEpisode(self, struct, render=False, stepCallback=None):
 
         # Initialize environment and state
 
@@ -56,11 +56,11 @@ class Simulation(evaluation.EvalFunc):
             self.s_nextState, self.s_reward, self.s_done, _ = self.env.step(self.s_action)
             self.s_totalReward += self.s_reward
 
-            # Performing learning step
+            # Triggering the step callback
 
-            if learnCallback is not None:
+            if stepCallback is not None:
 
-                learnCallback(
+                stepCallback(
                     self.s_state,
                     self.s_nextState,
                     self.s_action,

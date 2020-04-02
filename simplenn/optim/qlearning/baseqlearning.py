@@ -30,7 +30,7 @@ class BaseQLearning:
             # Performing one episode and updating Q
 
             self.Q.isLearning = True
-            sim.performEpisode(self.Q, learnCallback=self.learnStep)
+            sim.performEpisode(self.Q, stepCallback=self.learnStep)
             self.Q.isLearning = oldIsLearning
 
             # Performance evaluation
